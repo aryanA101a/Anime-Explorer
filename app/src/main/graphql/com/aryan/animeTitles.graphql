@@ -1,0 +1,21 @@
+query AnimeTitles($page: Int, $perPage: Int, $sort: MediaSort){
+    Page(page: $page, perPage: $perPage) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+            hasNextPage
+            perPage
+        }
+        media(sort:[$sort] ) {
+            id
+            title {
+                english
+            }
+            coverImage {
+                large
+                color
+            }
+        }
+    }
+}

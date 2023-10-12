@@ -1,4 +1,4 @@
-package com.aryan.animeexplorer.view.fragment
+package com.aryan.animeexplorer.presentation
 
 import androidx.lifecycle.ViewModel
 
