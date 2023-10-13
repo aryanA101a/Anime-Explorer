@@ -28,7 +28,7 @@ class AnimeTitleRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, AnimeTitleEntity>
     ): MediatorResult {
-        Log.i("LOAD", "load: Start")
+        Log.i("LOAD", "load: Start $type")
         return try {
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
@@ -44,21 +44,15 @@ class AnimeTitleRemoteMediator(
                     }
                 }
             }
-            val animeTitlesResult = when (type) {
-
-                AnimeTitleType.SEARCH -> TODO()
-
-                else -> animeClient.getAnimeTitles(
-                    page = loadKey,
-                    perPage = state.config.pageSize,
-                    sort = when (type) {
-                        AnimeTitleType.TRENDING -> MediaSort.TRENDING_DESC
-                        AnimeTitleType.POPULAR -> MediaSort.POPULARITY_DESC
-                        AnimeTitleType.TOP100 -> MediaSort.SCORE_DESC
-                        else -> null
-                    }!!
-                ) ?: throw InvalidObjectException("Invalid response from API")
-            }
+            val animeTitlesResult = animeClient.getAnimeTitles(
+                page = loadKey,
+                perPage = state.config.pageSize,
+                sort = when (type) {
+                    AnimeTitleType.TRENDING -> MediaSort.TRENDING_DESC
+                    AnimeTitleType.POPULAR -> MediaSort.POPULARITY_DESC
+                    AnimeTitleType.TOP100 -> MediaSort.SCORE_DESC
+                }
+            ) ?: throw InvalidObjectException("Invalid response from API")
 
 
             Log.i(
@@ -87,10 +81,9 @@ class AnimeTitleRemoteMediator(
                 cacheDB.animeTitlesPageDao.upsertAll(animeTitleEntities)
 
             }
-            val hasNext = animeTitlesResult.hasNextPage
+            animeTitlesResult.hasNextPage
                 ?: throw InvalidObjectException("hasNext should not be null")
-//                cacheDB.pageKeyDao.pageKey(animeTitlesResult.animeTitles.last().id).hasNextPage
-//                    ?: throw InvalidObjectException("Has next should not be null")
+
             MediatorResult.Success(endOfPaginationReached = !animeTitlesResult.hasNextPage)
         } catch (e: Exception) {
             Log.e("MediatorError", "load: $e")

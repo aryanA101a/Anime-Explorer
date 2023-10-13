@@ -27,6 +27,8 @@ class HomeViewModel @Inject constructor(
     @PopularAnimeTitlesPager popularAnimeTitlesPager: Pager<Int, AnimeTitleEntity>,
     @Top100AnimeTitlesPager topAnimeTitlesPager: Pager<Int, AnimeTitleEntity>
 ) : ViewModel() {
+
+
     val trendingAnimeTitles =
         trendingAnimeTitlesPager.flow.map { pagingData -> pagingData.map { it.toAnimeTitle() } }
             .cachedIn(viewModelScope)

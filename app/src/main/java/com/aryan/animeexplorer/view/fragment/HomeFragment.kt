@@ -10,9 +10,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.FragmentHomeBinding
 import com.aryan.animeexplorer.presentation.HomeViewModel
 import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
@@ -34,6 +36,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding.btnSearch.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
         initSubsections()
         subscribeUi()
         return binding.root
@@ -47,7 +52,6 @@ class HomeFragment : Fragment() {
                 RecyclerView.HORIZONTAL, false
             )
             adapter = trendingAnimeTitlesAdapter
-            setHasFixedSize(true)
         }
 
         popularAnimeTitlesAdapter = AnimeTitlesAdapter()
@@ -57,7 +61,6 @@ class HomeFragment : Fragment() {
                 RecyclerView.HORIZONTAL, false
             )
             adapter = popularAnimeTitlesAdapter
-            setHasFixedSize(true)
         }
 
         top100AnimeTitlesAdapter = AnimeTitlesAdapter()

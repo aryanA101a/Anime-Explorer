@@ -3,6 +3,7 @@ package com.aryan.animeexplorer.data.remote
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.aryan.AnimeTitlesQuery
+import com.aryan.SearchAnimeTitlesQuery
 import com.aryan.animeexplorer.data.local.AnimeTitlesResult
 import com.aryan.animeexplorer.data.mappers.toAnimeTitleResult
 import com.aryan.animeexplorer.domain.AnimeClient
@@ -32,6 +33,27 @@ class ApolloAnimeClient @Inject constructor(private val apolloClient: ApolloClie
                     return it?.copy(hasNextPage = false)
                 else it
             }
+
+    }
+
+
+    override suspend fun getSearchedAnimeTitles(
+        page: Int,
+        perPage: Int,
+        searchQuery: String
+    ): AnimeTitlesResult? {
+        return apolloClient.query(
+            SearchAnimeTitlesQuery(
+                page = Optional.present(page),
+                perPage = Optional.present(perPage),
+                search = Optional.present(searchQuery)
+            )
+        ).execute()
+            .takeIf { apolloResponse -> !apolloResponse.hasErrors() }
+            ?.data
+            ?.Page
+            ?.takeIf { page -> page.pageInfo != null && page.media != null }
+            ?.toAnimeTitleResult()
 
     }
 

@@ -1,4 +1,4 @@
-query AnimeTitles($page: Int, $perPage: Int, $sort: MediaSort){
+query SearchAnimeTitles($page: Int, $perPage: Int,$search:String){
     Page(page: $page, perPage: $perPage) {
         pageInfo {
             total
@@ -7,7 +7,7 @@ query AnimeTitles($page: Int, $perPage: Int, $sort: MediaSort){
             hasNextPage
             perPage
         }
-        media(sort:[$sort] ) {
+        media(search:$search, sort:SEARCH_MATCH) {
             id
             title {
                 english

@@ -5,10 +5,12 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.aryan.animeexplorer.domain.AnimeTitleType
 
-@Entity(tableName = AnimeTitleEntity.TABLE_NAME, indices =[Index(value = ["type"])] )
+@Entity(
+    tableName = AnimeTitleEntity.TABLE_NAME,
+    indices = [Index(value = ["type"])],
+    primaryKeys = ["id", "type"]
+)
 data class AnimeTitleEntity(
-    @PrimaryKey(autoGenerate = true)
-    val newId: Int = 0,
     val id: Int,
     val title: String?,
     val imageUrl: String?,

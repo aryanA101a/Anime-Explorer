@@ -15,8 +15,6 @@ interface AnimeTitlesPageDao {
     @Query("SELECT * FROM ${AnimeTitleEntity.TABLE_NAME} WHERE type=:type")
     fun pagingSource(type:AnimeTitleType): PagingSource<Int, AnimeTitleEntity>
 
-    @Query("SELECT DISTINCT(id),newId,title,imageUrl,color,type FROM ${AnimeTitleEntity.TABLE_NAME}  WHERE title LIKE :query")
-    fun searchPagingSource(query:String): PagingSource<Int, AnimeTitleEntity>
 
     @Query("DELETE FROM ${AnimeTitleEntity.TABLE_NAME}")
     suspend fun clearAll()

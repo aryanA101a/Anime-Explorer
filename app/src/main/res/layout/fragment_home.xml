@@ -7,16 +7,16 @@
 
     </data>
 
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            tools:context=".view.fragment.HomeFragment"
-            android:background="@color/backgroundColor">
+            android:background="@color/backgroundColor"
+            tools:context=".view.fragment.HomeFragment">
 
 
             <LinearLayout
@@ -44,7 +44,7 @@
                     android:layout_weight="1" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button"
+                    android:id="@+id/btnSearch"
                     style="@style/Widget.Material3.Button.IconButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -240,5 +240,5 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>
