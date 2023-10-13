@@ -1,7 +1,6 @@
 package com.aryan.animeexplorer.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.FragmentHomeBinding
+import com.aryan.animeexplorer.domain.AnimeTitleType
 import com.aryan.animeexplorer.presentation.HomeViewModel
 import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
             adapter = popularAnimeTitlesAdapter
         }
 
-        top100AnimeTitlesAdapter = AnimeTitlesAdapter()
+        top100AnimeTitlesAdapter = AnimeTitlesAdapter(AnimeTitleType.TOP100)
         binding.rvSubSectionTop100Anime.apply {
             layoutManager = GridLayoutManager(
                 requireContext(),2

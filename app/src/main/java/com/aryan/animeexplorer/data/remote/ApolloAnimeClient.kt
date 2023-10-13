@@ -28,9 +28,9 @@ class ApolloAnimeClient @Inject constructor(private val apolloClient: ApolloClie
             ?.Page
             ?.takeIf { page -> page.pageInfo != null && page.media != null }
             ?.toAnimeTitleResult()?.let {
-                //condition to only allow near 100 results on the top 100 anime title type
+                //condition to only allow 100 results on the top 100 anime title type
                 if (sort == MediaSort.SCORE_DESC && it.currentPage!! > 100 / pageSize)
-                    return it?.copy(hasNextPage = false)
+                    return it?.copy(animeTitles = it.animeTitles.subList(0, 4), hasNextPage = false)
                 else it
             }
 

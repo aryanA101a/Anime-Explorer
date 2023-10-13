@@ -1,9 +1,11 @@
 package com.aryan.animeexplorer.view.adapter
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -12,8 +14,9 @@ import coil.load
 import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.AnimeTitleBinding
 import com.aryan.animeexplorer.domain.AnimeTitle
+import com.aryan.animeexplorer.domain.AnimeTitleType
 
-class AnimeTitlesAdapter() :
+class AnimeTitlesAdapter(val type: AnimeTitleType? = null) :
     PagingDataAdapter<AnimeTitle, AnimeTitleViewHolder>(AnimeTitleDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeTitleViewHolder {
@@ -28,22 +31,31 @@ class AnimeTitlesAdapter() :
     }
 
     override fun onBindViewHolder(holder: AnimeTitleViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        getItem(position)?.let { holder.bind(it, position, type) }
     }
 
 
 }
 
 class AnimeTitleViewHolder(val binding: AnimeTitleBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(data: AnimeTitle) {
+    fun bind(data: AnimeTitle, position: Int, type: AnimeTitleType?) {
 
         binding.apply {
-            data.color?.let{ivAnimeTitle.setBackgroundColor(Color.parseColor(it))}
+            type?.let {
+                if (it == AnimeTitleType.TOP100) {
+                    cvRankAnimeTitle.isVisible = true
+                    tvRankAnimeTitle.text = (position + 1).toString()
+                    data.color?.let{color->cvRankAnimeTitle.backgroundTintList= ColorStateList.valueOf(Color.parseColor(color)) }
+                }
+            }
+            data.color?.let { ivAnimeTitle.setBackgroundColor(Color.parseColor(it)) }
             ivAnimeTitle.scaleType = ImageView.ScaleType.CENTER_CROP
-            data.imageUrl?.let { ivAnimeTitle.load(it) {
-                crossfade(true)
-            } }
-            tvAnimeTitle.text = data.title?:""
+            data.imageUrl?.let {
+                ivAnimeTitle.load(it) {
+                    crossfade(true)
+                }
+            }
+            tvAnimeTitle.text = data.title ?: ""
 
         }
 
