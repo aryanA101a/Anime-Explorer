@@ -1,31 +1,36 @@
 package com.aryan.animeexplorer.data.mappers
 
 import com.aryan.AnimeTitlesQuery
-import com.aryan.animeexplorer.data.local.AnimeTitleResult
+import com.aryan.animeexplorer.data.local.AnimeTitlesResult
 import com.aryan.animeexplorer.data.local.entity.AnimeTitleEntity
 import com.aryan.animeexplorer.domain.AnimeTitle
+import com.aryan.animeexplorer.domain.AnimeTitleType
 
-fun AnimeTitleResult.toAnimeTitleEntity(): AnimeTitleEntity {
+fun AnimeTitle.toAnimeTitleEntity(type:AnimeTitleType): AnimeTitleEntity {
     return AnimeTitleEntity(
         id = id,
         title = title,
         imageUrl = imageUrl,
-        color = color
+        color = color,
+        type = type
     )
 
 }
 
-fun AnimeTitlesQuery.Page.toAnimeTitleResults(): List<AnimeTitleResult> {
-    return media!!.map { medium ->
-        AnimeTitleResult(
-            currentPage = pageInfo?.currentPage,
-            hasNextPage = pageInfo?.hasNextPage,
-            id = medium!!.id,
-            title = medium.title?.english,
-            imageUrl = medium.coverImage?.large,
-            color = medium.coverImage?.color
-        )
-    }
+fun AnimeTitlesQuery.Page.toAnimeTitleResult(): AnimeTitlesResult {
+    return AnimeTitlesResult(
+        currentPage = pageInfo?.currentPage,
+        hasNextPage = pageInfo?.hasNextPage,
+        animeTitles = media!!.map { medium ->
+            AnimeTitle(
+                id = medium!!.id,
+                title = medium.title?.english,
+                imageUrl = medium.coverImage?.large,
+                color = medium.coverImage?.color
+            )
+        }
+    )
+
 }
 
 fun AnimeTitleEntity.toAnimeTitle(): AnimeTitle {

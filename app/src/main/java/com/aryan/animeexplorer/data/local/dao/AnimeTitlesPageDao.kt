@@ -5,14 +5,18 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.aryan.animeexplorer.data.local.entity.AnimeTitleEntity
+import com.aryan.animeexplorer.domain.AnimeTitleType
 
 @Dao
 interface AnimeTitlesPageDao {
-    @Upsert
+    @Upsert()
     suspend fun upsertAll(animeTitles:List<AnimeTitleEntity>)
 
-    @Query("SELECT * FROM ${AnimeTitleEntity.TABLE_NAME}")
-    fun pagingSource(): PagingSource<Int, AnimeTitleEntity>
+    @Query("SELECT * FROM ${AnimeTitleEntity.TABLE_NAME} WHERE type=:type")
+    fun pagingSource(type:AnimeTitleType): PagingSource<Int, AnimeTitleEntity>
+
+    @Query("SELECT DISTINCT(id),newId,title,imageUrl,color,type FROM ${AnimeTitleEntity.TABLE_NAME}  WHERE title LIKE :query")
+    fun searchPagingSource(query:String): PagingSource<Int, AnimeTitleEntity>
 
     @Query("DELETE FROM ${AnimeTitleEntity.TABLE_NAME}")
     suspend fun clearAll()

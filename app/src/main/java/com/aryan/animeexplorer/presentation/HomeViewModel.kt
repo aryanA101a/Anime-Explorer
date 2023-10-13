@@ -2,21 +2,39 @@ package com.aryan.animeexplorer.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.aryan.animeexplorer.data.local.CacheDatabase
 import com.aryan.animeexplorer.data.local.entity.AnimeTitleEntity
 import com.aryan.animeexplorer.data.mappers.toAnimeTitle
+import com.aryan.animeexplorer.data.remote.AnimeTitleRemoteMediator
+import com.aryan.animeexplorer.data.remote.ApolloAnimeClient
+import com.aryan.animeexplorer.data.remote.ApolloAnimeClient.Companion.pageSize
+import com.aryan.animeexplorer.di.PopularAnimeTitlesPager
+import com.aryan.animeexplorer.di.Top100AnimeTitlesPager
+import com.aryan.animeexplorer.di.TrendingAnimeTitlesPager
+import com.aryan.animeexplorer.domain.AnimeTitleType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    pager: Pager<Int, AnimeTitleEntity>
+    @TrendingAnimeTitlesPager trendingAnimeTitlesPager: Pager<Int, AnimeTitleEntity>,
+    @PopularAnimeTitlesPager popularAnimeTitlesPager: Pager<Int, AnimeTitleEntity>,
+    @Top100AnimeTitlesPager topAnimeTitlesPager: Pager<Int, AnimeTitleEntity>
 ) : ViewModel() {
     val trendingAnimeTitles =
-        pager.flow.map { pagingData -> pagingData.map { it.toAnimeTitle() } }
+        trendingAnimeTitlesPager.flow.map { pagingData -> pagingData.map { it.toAnimeTitle() } }
+            .cachedIn(viewModelScope)
+    val popularAnimeTitles =
+        popularAnimeTitlesPager.flow.map { pagingData -> pagingData.map { it.toAnimeTitle() } }
+            .cachedIn(viewModelScope)
+    val top100AnimeTitles =
+        topAnimeTitlesPager.flow.map { pagingData -> pagingData.map { it.toAnimeTitle() } }
             .cachedIn(viewModelScope)
 
 

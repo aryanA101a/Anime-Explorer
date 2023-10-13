@@ -1,7 +1,8 @@
 package com.aryan.animeexplorer.domain
 
-import com.aryan.animeexplorer.data.local.AnimeTitleResult
+import com.aryan.animeexplorer.data.local.AnimeTitlesResult
+import com.aryan.type.MediaSort
 
 interface AnimeClient {
-    suspend fun getAnimeTitleResults(page:Int, perPage:Int): List<AnimeTitleResult>
+    suspend fun getAnimeTitles(page:Int, perPage:Int, sort: MediaSort): AnimeTitlesResult?
 }
