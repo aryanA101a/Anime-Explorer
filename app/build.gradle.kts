@@ -43,6 +43,16 @@ android {
 
 dependencies {
 
+    val room_version = "2.5.2"
+    val paging_version = "3.2.1"
+
+    implementation("androidx.paging:paging-runtime-ktx:$paging_version")
+
+
+    implementation("androidx.room:room-ktx:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-paging:$room_version")
+
     implementation("io.coil-kt:coil:2.4.0")
 
     implementation("com.google.dagger:hilt-android:2.48.1")

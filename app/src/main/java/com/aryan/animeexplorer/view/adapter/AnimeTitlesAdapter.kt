@@ -1,25 +1,23 @@
 package com.aryan.animeexplorer.view.adapter
 
 import android.graphics.Color
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import coil.size.Scale
 import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.AnimeTitleBinding
 import com.aryan.animeexplorer.domain.AnimeTitle
 
-class AnimeTitlesAdapter() : ListAdapter<AnimeTitle, MyViewHolder>(MyDiffCallback()) {
+class AnimeTitlesAdapter() :
+    PagingDataAdapter<AnimeTitle, AnimeTitleViewHolder>(AnimeTitleDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeTitleViewHolder {
+        return AnimeTitleViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.anime_title,
@@ -29,23 +27,23 @@ class AnimeTitlesAdapter() : ListAdapter<AnimeTitle, MyViewHolder>(MyDiffCallbac
         )
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: AnimeTitleViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
     }
 
 
 }
 
-class MyViewHolder(val binding: AnimeTitleBinding) : RecyclerView.ViewHolder(binding.root) {
+class AnimeTitleViewHolder(val binding: AnimeTitleBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: AnimeTitle) {
 
         binding.apply {
-            ivAnimeTitle.setBackgroundColor(Color.parseColor(data.coverImage.color))
-            ivAnimeTitle.scaleType= ImageView.ScaleType.CENTER_CROP
-            ivAnimeTitle.load(data.coverImage.image){
+            data.color?.let{ivAnimeTitle.setBackgroundColor(Color.parseColor(it))}
+            ivAnimeTitle.scaleType = ImageView.ScaleType.CENTER_CROP
+            data.imageUrl?.let { ivAnimeTitle.load(it) {
                 crossfade(true)
-            }
-            tvAnimeTitle.text = data.title
+            } }
+            tvAnimeTitle.text = data.title?:""
 
         }
 
@@ -54,7 +52,7 @@ class MyViewHolder(val binding: AnimeTitleBinding) : RecyclerView.ViewHolder(bin
 
 }
 
-class MyDiffCallback : DiffUtil.ItemCallback<AnimeTitle>() {
+class AnimeTitleDiffCallback : DiffUtil.ItemCallback<AnimeTitle>() {
     override fun areItemsTheSame(
         oldItem: AnimeTitle,
         newItem: AnimeTitle
@@ -66,7 +64,7 @@ class MyDiffCallback : DiffUtil.ItemCallback<AnimeTitle>() {
         oldItem: AnimeTitle,
         newItem: AnimeTitle
     ): Boolean {
-        return oldItem.title == newItem.title && oldItem.coverImage == newItem.coverImage
+        return oldItem.title == newItem.title && oldItem.imageUrl == newItem.imageUrl
     }
 
 }

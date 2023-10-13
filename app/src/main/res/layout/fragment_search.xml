@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/round_search_24"
             android:drawablePadding="8dp"
-            android:drawableTint="@color/primaryColor"
+            android:drawableTint="@color/titleOne"
             android:elevation="20dp"
             android:hint="search"
             android:outlineProvider="none"

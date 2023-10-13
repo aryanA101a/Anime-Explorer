@@ -28,7 +28,7 @@
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
-        app:cardBackgroundColor="@color/secondaryColor"
+        app:cardBackgroundColor="@color/logoBackground"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
@@ -45,7 +45,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="6dp"
             android:text="Explorer"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/titleOne"
             android:textSize="40sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>

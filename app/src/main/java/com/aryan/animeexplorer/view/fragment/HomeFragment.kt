@@ -15,6 +15,8 @@ import com.aryan.animeexplorer.databinding.FragmentHomeBinding
 import com.aryan.animeexplorer.presentation.HomeViewModel
 import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -41,16 +43,14 @@ class HomeFragment : Fragment() {
         )
         adapter = AnimeTitlesAdapter()
         binding.rvSubSectionTrending.adapter = adapter
-        adapter.submitList(viewModel.animeTitlesState.value.animeTitles)
+        binding.rvSubSectionTrending.setHasFixedSize(true)
     }
 
     private fun subscribeUi() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.animeTitlesState.collect { animeTitlesState ->
-                    adapter.submitList(animeTitlesState.animeTitles)
-                    binding.pbSubSectionTrending.visibility =
-                        if (animeTitlesState.isLoading) View.VISIBLE else View.INVISIBLE
+                viewModel.trendingAnimeTitles.collect { animeTitle ->
+                    adapter.submitData(viewLifecycleOwner.lifecycle,animeTitle)
                 }
             }
         }
