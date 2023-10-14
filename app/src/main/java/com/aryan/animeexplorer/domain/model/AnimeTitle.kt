@@ -1,4 +1,4 @@
-package com.aryan.animeexplorer.domain
+package com.aryan.animeexplorer.domain.model
 
 data class AnimeTitle(
     val id: Int,

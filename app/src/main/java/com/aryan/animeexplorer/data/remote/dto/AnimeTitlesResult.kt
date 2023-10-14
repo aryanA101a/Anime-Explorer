@@ -1,6 +1,6 @@
-package com.aryan.animeexplorer.data.local
+package com.aryan.animeexplorer.data.remote.dto
 
-import com.aryan.animeexplorer.domain.AnimeTitle
+import com.aryan.animeexplorer.domain.model.AnimeTitle
 
 data class AnimeTitlesResult (
     val currentPage: Int?,

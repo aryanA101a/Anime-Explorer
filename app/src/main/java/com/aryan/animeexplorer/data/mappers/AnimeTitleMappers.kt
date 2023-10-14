@@ -3,12 +3,12 @@ package com.aryan.animeexplorer.data.mappers
 import android.util.Log
 import com.aryan.AnimeTitlesQuery
 import com.aryan.SearchAnimeTitlesQuery
-import com.aryan.animeexplorer.data.local.AnimeTitlesResult
+import com.aryan.animeexplorer.data.remote.dto.AnimeTitlesResult
 import com.aryan.animeexplorer.data.local.entity.AnimeTitleEntity
-import com.aryan.animeexplorer.domain.AnimeTitle
-import com.aryan.animeexplorer.domain.AnimeTitleType
+import com.aryan.animeexplorer.domain.model.AnimeTitle
+import com.aryan.animeexplorer.domain.model.AnimeTitleType
 
-fun AnimeTitle.toAnimeTitleEntity(type:AnimeTitleType): AnimeTitleEntity {
+fun AnimeTitle.toAnimeTitleEntity(type: AnimeTitleType): AnimeTitleEntity {
     return AnimeTitleEntity(
         id = id,
         title = title,

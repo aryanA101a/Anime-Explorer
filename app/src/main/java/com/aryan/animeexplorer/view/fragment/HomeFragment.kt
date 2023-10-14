@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.FragmentHomeBinding
-import com.aryan.animeexplorer.domain.AnimeTitleType
+import com.aryan.animeexplorer.domain.model.AnimeTitleType
 import com.aryan.animeexplorer.presentation.HomeViewModel
 import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        binding.btnSearch.setOnClickListener{
+        binding.btnSearch.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
         initSubsections()
@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initSubsections() {
-        trendingAnimeTitlesAdapter = AnimeTitlesAdapter()
+        trendingAnimeTitlesAdapter = AnimeTitlesAdapter(onViewItemClicked = ::onAnimeTitleClicked)
         binding.rvSubSectionTrending.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
             adapter = trendingAnimeTitlesAdapter
         }
 
-        popularAnimeTitlesAdapter = AnimeTitlesAdapter()
+        popularAnimeTitlesAdapter = AnimeTitlesAdapter(onViewItemClicked = ::onAnimeTitleClicked)
         binding.rvSubSectionAllTimePopular.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -63,10 +63,10 @@ class HomeFragment : Fragment() {
             adapter = popularAnimeTitlesAdapter
         }
 
-        top100AnimeTitlesAdapter = AnimeTitlesAdapter(AnimeTitleType.TOP100)
+        top100AnimeTitlesAdapter = AnimeTitlesAdapter(AnimeTitleType.TOP100,::onAnimeTitleClicked)
         binding.rvSubSectionTop100Anime.apply {
             layoutManager = GridLayoutManager(
-                requireContext(),2
+                requireContext(), 2
             )
             adapter = top100AnimeTitlesAdapter
         }
@@ -95,6 +95,14 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun onAnimeTitleClicked(id: Int, title: String) {
+        val bundle = Bundle().apply {
+            putString("id", id.toString())
+            putString("title", title)
+        }
+        findNavController().navigate(R.id.action_homeFragment_to_animeDetailFragment,bundle)
     }
 
 

@@ -13,7 +13,7 @@ import com.aryan.animeexplorer.data.local.CacheDatabase
 import com.aryan.animeexplorer.data.local.entity.PageKeyEntity
 import com.aryan.animeexplorer.data.mappers.toAnimeTitleEntity
 import com.aryan.animeexplorer.domain.AnimeClient
-import com.aryan.animeexplorer.domain.AnimeTitleType
+import com.aryan.animeexplorer.domain.model.AnimeTitleType
 import com.aryan.type.MediaSort
 import java.io.InvalidObjectException
 

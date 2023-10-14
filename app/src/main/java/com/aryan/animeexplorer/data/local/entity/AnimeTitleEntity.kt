@@ -2,8 +2,7 @@ package com.aryan.animeexplorer.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.Index
-import androidx.room.PrimaryKey
-import com.aryan.animeexplorer.domain.AnimeTitleType
+import com.aryan.animeexplorer.domain.model.AnimeTitleType
 
 @Entity(
     tableName = AnimeTitleEntity.TABLE_NAME,

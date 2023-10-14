@@ -11,8 +11,10 @@ import com.aryan.animeexplorer.data.local.CacheDatabase
 import com.aryan.animeexplorer.data.remote.AnimeTitleRemoteMediator
 import com.aryan.animeexplorer.data.remote.ApolloAnimeClient
 import com.aryan.animeexplorer.data.remote.ApolloAnimeClient.Companion.pageSize
+import com.aryan.animeexplorer.data.repository.AnimeDetailsRepositoryImpl
 import com.aryan.animeexplorer.domain.AnimeClient
-import com.aryan.animeexplorer.domain.AnimeTitleType
+import com.aryan.animeexplorer.domain.model.AnimeTitleType
+import com.aryan.animeexplorer.domain.repository.AnimeDetailsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -112,6 +114,15 @@ object AppModule {
         ) {
             cacheDatabase.animeTitlesPageDao.pagingSource(AnimeTitleType.TOP100)
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnimeDetailsRepository(
+        animeClient: AnimeClient,
+        cacheDatabase: CacheDatabase
+    ): AnimeDetailsRepository {
+        return AnimeDetailsRepositoryImpl(animeClient, cacheDatabase)
     }
 
 

@@ -1,12 +1,16 @@
 package com.aryan.animeexplorer.data.remote
 
+import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import com.aryan.AnimeDetailsQuery
 import com.aryan.AnimeTitlesQuery
 import com.aryan.SearchAnimeTitlesQuery
-import com.aryan.animeexplorer.data.local.AnimeTitlesResult
+import com.aryan.animeexplorer.data.mappers.toAnimeDetails
 import com.aryan.animeexplorer.data.mappers.toAnimeTitleResult
+import com.aryan.animeexplorer.data.remote.dto.AnimeTitlesResult
 import com.aryan.animeexplorer.domain.AnimeClient
+import com.aryan.animeexplorer.domain.model.AnimeDetails
 import com.aryan.type.MediaSort
 import javax.inject.Inject
 
@@ -37,7 +41,7 @@ class ApolloAnimeClient @Inject constructor(private val apolloClient: ApolloClie
     }
 
 
-    override suspend fun getSearchedAnimeTitles(
+    override suspend fun searchAnimeTitles(
         page: Int,
         perPage: Int,
         searchQuery: String
@@ -55,6 +59,24 @@ class ApolloAnimeClient @Inject constructor(private val apolloClient: ApolloClie
             ?.takeIf { page -> page.pageInfo != null && page.media != null }
             ?.toAnimeTitleResult()
 
+    }
+
+    override suspend fun getAnimeDetails(
+        id: Int
+    ): AnimeDetailsQuery.Media? {
+        return try {
+            apolloClient.query(
+                AnimeDetailsQuery(
+                    id = Optional.present(id)
+                )
+            ).execute()
+                .takeIf { apolloResponse -> !apolloResponse.hasErrors() }
+                ?.data
+                ?.Media
+        } catch (e: Exception) {
+            Log.e("TAG", "getAnimeDetails: $e")
+            null
+        }
     }
 
     companion object {

@@ -12,10 +12,21 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.aryan.animeexplorer.view.fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/animeDetailFragment"
+        android:name="com.aryan.animeexplorer.view.fragment.AnimeDetailsFragment"
+        android:label="AnimeDetailFragment" />
 </navigation>
