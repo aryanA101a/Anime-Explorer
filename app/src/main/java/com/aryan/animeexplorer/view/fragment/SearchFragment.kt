@@ -71,7 +71,7 @@ private fun initSearchResults(){
             putString("id", id.toString())
             putString("title", title)
         }
-        findNavController().navigate(R.id.action_homeFragment_to_animeDetailFragment,bundle)
+        findNavController().navigate(R.id.action_searchFragment_to_animeDetailFragment,bundle)
     }
 
 }

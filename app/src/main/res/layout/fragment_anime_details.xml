@@ -188,7 +188,7 @@
                                 android:id="@+id/tvEpisodes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.animeDetailsState.episodes.toString() ?? ``}" />
+                                android:text="@{viewModel.animeDetailsState.episodes==null ? `` : viewModel.animeDetailsState.episodes.toString()}" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
@@ -225,7 +225,7 @@
                                 android:id="@+id/tvDuration"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.animeDetailsState.duration.toString()+` min` ?? ``}" />
+                                android:text="@{viewModel.animeDetailsState.duration==null ? `` : viewModel.animeDetailsState.duration.toString() + ` min` }" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -330,7 +330,7 @@
                                 android:id="@+id/tvMeanScore"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.animeDetailsState.meanScore.toString() ?? ``}" />
+                                android:text="@{viewModel.animeDetailsState.meanScore==null? `` : viewModel.animeDetailsState.meanScore.toString()}" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>

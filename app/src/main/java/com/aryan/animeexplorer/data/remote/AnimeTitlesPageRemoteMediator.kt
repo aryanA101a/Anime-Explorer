@@ -30,6 +30,7 @@ class AnimeTitleRemoteMediator(
     ): MediatorResult {
         Log.i("LOAD", "load: Start $type")
         return try {
+            var hasNext: Boolean?
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
@@ -38,9 +39,12 @@ class AnimeTitleRemoteMediator(
                     if (lastItem == null) {
                         1
                     } else {
-                        val currentPage = cacheDB.pageKeyDao.pageKey(lastItem.id, type).currentPage
-                            ?: throw InvalidObjectException("Remote key should not be null for $loadType")
-                        currentPage + 1
+                        val pageKey = cacheDB.pageKeyDao.pageKey(lastItem.id, type)
+                        hasNext = pageKey.hasNextPage
+                        if (pageKey.currentPage != null)
+                            pageKey.currentPage + 1
+                        else
+                            throw InvalidObjectException("Remote key should not be null for $loadType")
                     }
                 }
             }
@@ -52,39 +56,42 @@ class AnimeTitleRemoteMediator(
                     AnimeTitleType.POPULAR -> MediaSort.POPULARITY_DESC
                     AnimeTitleType.TOP100 -> MediaSort.SCORE_DESC
                 }
-            ) ?: throw InvalidObjectException("Invalid response from API")
+            )
 
 
             Log.i(
                 "LOAD",
-                "$type: page:$loadKey $loadType size:${animeTitlesResult.animeTitles.size}"
+                "$type: page:$loadKey $loadType size:${animeTitlesResult?.animeTitles?.size}"
             )
 
-            cacheDB.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    cacheDB.pageKeyDao.clearAll()
-                    cacheDB.animeTitlesPageDao.clearAll()
+            animeTitlesResult?.let {
+                cacheDB.withTransaction {
+                    if (loadType == LoadType.REFRESH) {
+                        cacheDB.pageKeyDao.clearAll()
+                        cacheDB.animeTitlesPageDao.clearAll()
+                    }
+
+                    val pageKeys = animeTitlesResult.animeTitles.map {
+                        PageKeyEntity(
+                            animeTitleID = it.id,
+                            currentPage = animeTitlesResult.currentPage,
+                            hasNextPage = animeTitlesResult.hasNextPage,
+                            type = type
+                        )
+                    }
+                    val animeTitleEntities =
+                        animeTitlesResult.animeTitles.map { it.toAnimeTitleEntity(type) }
+
+                    cacheDB.pageKeyDao.upsertAll(pageKeys)
+                    cacheDB.animeTitlesPageDao.upsertAll(animeTitleEntities)
+
                 }
-
-                val pageKeys = animeTitlesResult.animeTitles.map {
-                    PageKeyEntity(
-                        animeTitleID = it.id,
-                        currentPage = animeTitlesResult.currentPage,
-                        hasNextPage = animeTitlesResult.hasNextPage,
-                        type = type
-                    )
-                }
-                val animeTitleEntities =
-                    animeTitlesResult.animeTitles.map { it.toAnimeTitleEntity(type) }
-
-                cacheDB.pageKeyDao.upsertAll(pageKeys)
-                cacheDB.animeTitlesPageDao.upsertAll(animeTitleEntities)
-
             }
-            animeTitlesResult.hasNextPage
-                ?: throw InvalidObjectException("hasNext should not be null")
+            hasNext = animeTitlesResult?.hasNextPage
 
-            MediatorResult.Success(endOfPaginationReached = !animeTitlesResult.hasNextPage)
+            hasNext ?: throw InvalidObjectException("hasNext should not be null")
+
+            MediatorResult.Success(endOfPaginationReached = !hasNext)
         } catch (e: Exception) {
             Log.e("MediatorError", "load: $e")
             MediatorResult.Error(e)
