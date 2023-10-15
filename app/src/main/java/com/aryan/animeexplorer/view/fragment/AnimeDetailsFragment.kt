@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -33,10 +34,14 @@ class AnimeDetailsFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
         }
+
         val id = arguments?.getString("id")
         val title = arguments?.getString("title")
-        animeDetailsViewModel.setAnimeDetails(id!!, title)
-        subscribeUi()
+        id?.let {
+            animeDetailsViewModel.setAnimeDetails(it.toInt(), title)
+            subscribeUi()
+        }
+
         return binding.root
     }
 
@@ -55,7 +60,8 @@ class AnimeDetailsFragment : Fragment() {
                             }
                         }
 
-
+                        is AnimeDetailsViewModel.AnimeDetailsUiStates.ShowIsFavourite ->
+                            binding.btnFavourite.isVisible = true
                     }
                 }
             }

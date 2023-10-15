@@ -3,6 +3,9 @@ package com.aryan.animeexplorer.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aryan.animeexplorer.data.local.CacheDatabase
+import com.aryan.animeexplorer.data.local.entity.FavouritesEntity
+import com.aryan.animeexplorer.data.mappers.toFavouriteAnimeTitle
 import com.aryan.animeexplorer.domain.model.AnimeDetails
 import com.aryan.animeexplorer.domain.repository.AnimeDetailsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,8 +16,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AnimeDetailsViewModel @Inject constructor(private val animeDetailsRepository: AnimeDetailsRepository) :
+class AnimeDetailsViewModel @Inject constructor(
+    private val animeDetailsRepository: AnimeDetailsRepository,
+    private val cacheDatabase: CacheDatabase
+) :
     ViewModel() {
+
+    private val _isFavourite = MutableStateFlow<Boolean>(false)
+    val isFavourite:StateFlow<Boolean> = _isFavourite
 
     private val _animeDetailsState = MutableStateFlow(AnimeDetails(0))
     val animeDetailsState: StateFlow<AnimeDetails> = _animeDetailsState
@@ -23,11 +32,22 @@ class AnimeDetailsViewModel @Inject constructor(private val animeDetailsReposito
         MutableStateFlow(AnimeDetailsUiStates.Initial())
     val uiState: StateFlow<AnimeDetailsUiStates> = _uiState
 
-    fun setAnimeDetails(id: String, title: String?) {
+    fun setAnimeDetails(id: Int, title: String?) {
         _animeDetailsState.update { it.copy(id = id.toInt(), title = title) }
-        Log.i("TAG", "setAnimeDetails: $id, $title")
+
+
+
         try {
             viewModelScope.launch {
+                //init isFavourite
+                cacheDatabase.favouritesDao.isFavourite(id)?.let {
+                    _isFavourite.update { true }
+                }
+                _uiState.update {
+                    AnimeDetailsUiStates.ShowIsFavourite()
+                }
+
+                //retrieve anime details
                 animeDetailsRepository.getAnimeDetails(id.toInt()).collect { animeDetails ->
                     Log.i("TAG", "setAnimeDetails: $animeDetails")
                     if (animeDetails != null) {
@@ -48,9 +68,25 @@ class AnimeDetailsViewModel @Inject constructor(private val animeDetailsReposito
         }
     }
 
+    fun toggleFavourite() {
+        try {
+            _isFavourite.update { !_isFavourite.value }
+            viewModelScope.launch {
+                if (_isFavourite.value)
+                    cacheDatabase.favouritesDao.markAsFavourite(animeDetailsState.value.toFavouriteAnimeTitle())
+                else
+                    cacheDatabase.favouritesDao.unMarkAsFavourite(animeDetailsState.value.id)
+
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "setIsFavourite: $e")
+        }
+    }
+
     sealed class AnimeDetailsUiStates {
         data class Initial(val message: String? = null) : AnimeDetailsUiStates()
         data class Error(val message: String) : AnimeDetailsUiStates()
         data class LoadBannerImage(val url: String) : AnimeDetailsUiStates()
+        data class ShowIsFavourite(val data: Boolean? = null) : AnimeDetailsUiStates()
     }
 }

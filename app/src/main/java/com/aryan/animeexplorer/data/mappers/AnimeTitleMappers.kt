@@ -14,7 +14,7 @@ fun AnimeTitle.toAnimeTitleEntity(type: AnimeTitleType): AnimeTitleEntity {
         title = title,
         imageUrl = imageUrl,
         color = color,
-        type = type
+        type = type,
     )
 
 }
@@ -28,7 +28,7 @@ fun AnimeTitlesQuery.Page.toAnimeTitleResult(): AnimeTitlesResult {
                 id = medium!!.id,
                 title = medium.title?.english,
                 imageUrl = medium.coverImage?.large,
-                color = medium.coverImage?.color
+                color = medium.coverImage?.color,
             )
         }
     ).also { Log.i("TAG", "toAnimeTitleResult: ${it.hasNextPage}") }
@@ -45,7 +45,7 @@ fun SearchAnimeTitlesQuery.Page.toAnimeTitleResult(): AnimeTitlesResult {
                 id = medium!!.id,
                 title = medium.title?.english,
                 imageUrl = medium.coverImage?.large,
-                color = medium.coverImage?.color
+                color = medium.coverImage?.color,
             )
         }
     ).also { Log.i("TAG", "toAnimeTitleResult: ${it.hasNextPage}") }
@@ -59,7 +59,7 @@ fun AnimeTitleEntity.toAnimeTitle(): AnimeTitle {
         id = id,
         title = title,
         imageUrl = imageUrl,
-        color = color
+        color = color,
     )
 }
 

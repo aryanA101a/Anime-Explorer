@@ -39,6 +39,9 @@ class HomeFragment : Fragment() {
         binding.btnSearch.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
+        binding.btnFavourites.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_favouriteFragment)
+        }
         initSubsections()
         subscribeUi()
         return binding.root
@@ -63,7 +66,7 @@ class HomeFragment : Fragment() {
             adapter = popularAnimeTitlesAdapter
         }
 
-        top100AnimeTitlesAdapter = AnimeTitlesAdapter(AnimeTitleType.TOP100,::onAnimeTitleClicked)
+        top100AnimeTitlesAdapter = AnimeTitlesAdapter(AnimeTitleType.TOP100, ::onAnimeTitleClicked)
         binding.rvSubSectionTop100Anime.apply {
             layoutManager = GridLayoutManager(
                 requireContext(), 2
@@ -102,7 +105,7 @@ class HomeFragment : Fragment() {
             putString("id", id.toString())
             putString("title", title)
         }
-        findNavController().navigate(R.id.action_homeFragment_to_animeDetailFragment,bundle)
+        findNavController().navigate(R.id.action_homeFragment_to_animeDetailFragment, bundle)
     }
 
 

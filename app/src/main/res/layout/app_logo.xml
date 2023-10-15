@@ -13,10 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
+        android:autoText="true"
+        android:maxLines="1"
         android:text="Anime"
         android:textColor="#5D728B"
-        android:textSize="40sp"
-        android:textStyle="bold" />
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:autoSizeTextType="uniform" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvLogoTextTwo"
@@ -44,10 +47,13 @@
             android:layout_marginTop="6dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="6dp"
+            android:autoText="true"
+            android:maxLines="1"
             android:text="Explorer"
             android:textColor="@color/titleOne"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+            android:textSize="36sp"
+            android:textStyle="bold"
+            app:autoSizeTextType="uniform" />
     </androidx.cardview.widget.CardView>
 </LinearLayout>
 

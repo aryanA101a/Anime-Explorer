@@ -50,7 +50,6 @@ private fun initSearchResults(){
            2
         )
         adapter = searchAnimeTitlesAdapter
-//        setHasFixedSize(true)
     }
 }
 

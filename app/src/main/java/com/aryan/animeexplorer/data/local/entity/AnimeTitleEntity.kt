@@ -14,7 +14,7 @@ data class AnimeTitleEntity(
     val title: String?,
     val imageUrl: String?,
     val color: String?,
-    val type: AnimeTitleType
+    val type: AnimeTitleType,
 ) {
     companion object {
         const val TABLE_NAME = "anime_title"

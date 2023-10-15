@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_homeFragment_to_animeDetailFragment"
             app:destination="@id/animeDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favouriteFragment"
+            app:destination="@id/favouriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -29,4 +32,13 @@
         android:id="@+id/animeDetailFragment"
         android:name="com.aryan.animeexplorer.view.fragment.AnimeDetailsFragment"
         android:label="AnimeDetailFragment" />
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.aryan.animeexplorer.view.fragment.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment" />
+    </fragment>
 </navigation>

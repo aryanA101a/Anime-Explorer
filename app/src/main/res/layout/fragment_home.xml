@@ -36,12 +36,24 @@
                     layout="@layout/app_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start" />
+                    android:layout_gravity="start"
+                    android:layout_weight="1" />
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFavourites"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="6dp"
+                    android:backgroundTint="@color/logoBackground"
+                    app:icon="@drawable/round_star_24"
+                    app:iconTint="@color/titleOne" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSearch"
