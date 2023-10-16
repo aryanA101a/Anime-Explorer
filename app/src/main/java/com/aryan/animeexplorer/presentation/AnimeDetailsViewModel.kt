@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aryan.animeexplorer.data.local.CacheDatabase
-import com.aryan.animeexplorer.data.local.entity.FavouritesEntity
 import com.aryan.animeexplorer.data.mappers.toFavouriteAnimeTitle
 import com.aryan.animeexplorer.domain.model.AnimeDetails
 import com.aryan.animeexplorer.domain.repository.AnimeDetailsRepository
@@ -32,11 +31,12 @@ class AnimeDetailsViewModel @Inject constructor(
         MutableStateFlow(AnimeDetailsUiStates.Initial())
     val uiState: StateFlow<AnimeDetailsUiStates> = _uiState
 
-    fun setAnimeDetails(id: Int, title: String?) {
+    fun loadAnimeDetails(id: Int, title: String?){
         _animeDetailsState.update { it.copy(id = id.toInt(), title = title) }
+        retrieveAnimeDetails(id)
+    }
 
-
-
+    fun retrieveAnimeDetails(id:Int){
         try {
             viewModelScope.launch {
                 //init isFavourite

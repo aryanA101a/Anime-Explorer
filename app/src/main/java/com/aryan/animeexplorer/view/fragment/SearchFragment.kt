@@ -55,7 +55,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        try {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.searchedAnimeTitles.collect { animeTitles ->
@@ -67,26 +66,28 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.uiState.collect {
-                        when (it) {
-                            is SearchViewModel.SearchUiStates.Empty -> {
-                                binding.llException.isVisible = true
-                                binding.tvException.text = "No Data"
-                            }
-
-                            is SearchViewModel.SearchUiStates.Error -> {
-                                binding.llException.isVisible = true
-                                binding.tvException.text = "Something went wrong"
-                            }
-
-                            is SearchViewModel.SearchUiStates.Initial -> Unit
-                            is SearchViewModel.SearchUiStates.Success -> binding.llException.isVisible =
-                                false
-                        }
+                       handleUiState(it)
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.e("TAG", "subscribeUi: $e")
+
+    }
+
+    private fun handleUiState(it: SearchViewModel.SearchUiStates) {
+        when (it) {
+            is SearchViewModel.SearchUiStates.Empty -> {
+                binding.llException.isVisible = true
+                binding.tvException.text = "No Data"
+            }
+
+            is SearchViewModel.SearchUiStates.Error -> {
+                binding.llException.isVisible = true
+                binding.tvException.text = "Something went wrong"
+            }
+
+            is SearchViewModel.SearchUiStates.Initial -> Unit
+            is SearchViewModel.SearchUiStates.Success -> binding.llException.isVisible =
+                false
         }
     }
 

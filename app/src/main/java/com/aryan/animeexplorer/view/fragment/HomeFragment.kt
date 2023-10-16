@@ -79,11 +79,14 @@ class HomeFragment : Fragment() {
                 requireContext(), 2
             )
             adapter = top100AnimeTitlesAdapter
-            
+
         }
     }
 
     private fun subscribeUi() {
+
+        binding.srlHome.setOnRefreshListener { refresh() }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.trendingAnimeTitles.collect { animeTitle ->
@@ -102,6 +105,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.top100AnimeTitles.collect { animeTitle ->
+
                     top100AnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
                 }
             }
@@ -116,6 +120,16 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_animeDetailFragment, bundle)
     }
 
+    private fun refresh() {
+        binding.srlHome.isRefreshing = true
 
+        trendingAnimeTitlesAdapter.refresh()
+        popularAnimeTitlesAdapter.refresh()
+        top100AnimeTitlesAdapter.refresh()
+
+        binding.srlHome.isRefreshing = false
+
+
+    }
 }
 

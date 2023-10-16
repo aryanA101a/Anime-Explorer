@@ -63,15 +63,11 @@ object AppModule {
     @Singleton
     @TrendingAnimeTitlesPager
     fun provideTrendingAnimeTitlesPager(
-        cacheDatabase: CacheDatabase,
-        animeClient: AnimeClient
+        cacheDatabase: CacheDatabase, animeClient: AnimeClient
     ): Pager<Int, AnimeTitleEntity> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
-            remoteMediator = AnimeTitleRemoteMediator(
-                cacheDB = cacheDatabase,
-                animeClient = animeClient,
-                type = AnimeTitleType.TRENDING
+            config = PagingConfig(pageSize = pageSize), remoteMediator = AnimeTitleRemoteMediator(
+                cacheDB = cacheDatabase, animeClient = animeClient, type = AnimeTitleType.TRENDING
             )
         ) {
             cacheDatabase.animeTitlesPageDao.pagingSource(AnimeTitleType.TRENDING)
@@ -82,15 +78,11 @@ object AppModule {
     @Singleton
     @PopularAnimeTitlesPager
     fun providePopularAnimeTitlesPager(
-        cacheDatabase: CacheDatabase,
-        animeClient: AnimeClient
+        cacheDatabase: CacheDatabase, animeClient: AnimeClient
     ): Pager<Int, AnimeTitleEntity> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
-            remoteMediator = AnimeTitleRemoteMediator(
-                cacheDB = cacheDatabase,
-                animeClient = animeClient,
-                type = AnimeTitleType.POPULAR
+            config = PagingConfig(pageSize = pageSize), remoteMediator = AnimeTitleRemoteMediator(
+                cacheDB = cacheDatabase, animeClient = animeClient, type = AnimeTitleType.POPULAR
             )
         ) {
             cacheDatabase.animeTitlesPageDao.pagingSource(AnimeTitleType.POPULAR)
@@ -101,15 +93,11 @@ object AppModule {
     @Singleton
     @Top100AnimeTitlesPager
     fun provideTop100AnimeTitlesPager(
-        cacheDatabase: CacheDatabase,
-        animeClient: AnimeClient
+        cacheDatabase: CacheDatabase, animeClient: AnimeClient
     ): Pager<Int, AnimeTitleEntity> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
-            remoteMediator = AnimeTitleRemoteMediator(
-                cacheDB = cacheDatabase,
-                animeClient = animeClient,
-                type = AnimeTitleType.TOP100
+            config = PagingConfig(pageSize = pageSize), remoteMediator = AnimeTitleRemoteMediator(
+                cacheDB = cacheDatabase, animeClient = animeClient, type = AnimeTitleType.TOP100
             )
         ) {
             cacheDatabase.animeTitlesPageDao.pagingSource(AnimeTitleType.TOP100)
@@ -119,8 +107,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAnimeDetailsRepository(
-        animeClient: AnimeClient,
-        cacheDatabase: CacheDatabase
+        animeClient: AnimeClient, cacheDatabase: CacheDatabase
     ): AnimeDetailsRepository {
         return AnimeDetailsRepositoryImpl(animeClient, cacheDatabase)
     }

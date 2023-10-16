@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,7 +16,6 @@ import com.aryan.animeexplorer.databinding.FragmentAnimeDetailsBinding
 import com.aryan.animeexplorer.presentation.AnimeDetailsViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -41,7 +39,7 @@ class AnimeDetailsFragment : Fragment() {
         val id = arguments?.getString("id")
         val title = arguments?.getString("title")
         id?.let {
-            animeDetailsViewModel.setAnimeDetails(it.toInt(), title)
+            animeDetailsViewModel.loadAnimeDetails(it.toInt(), title)
             subscribeUi()
         }
 
@@ -49,38 +47,53 @@ class AnimeDetailsFragment : Fragment() {
     }
 
     private fun subscribeUi() {
+        binding.srlAnimeDetails.setOnRefreshListener {
+            animeDetailsViewModel.apply {
+                if (animeDetailsState.value.id != 0) {
+                    binding.srlAnimeDetails.isRefreshing=true
+                    retrieveAnimeDetails(animeDetailsState.value.id)
+                    binding.srlAnimeDetails.isRefreshing=false
+                }
+            }
+
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 animeDetailsViewModel.uiState.collect {
-                    when (it) {
-                        is AnimeDetailsViewModel.AnimeDetailsUiStates.Error -> {
-                            Log.i("TAG", "subscribeUi: erros")
-                            Snackbar.make(binding.cLayout, it.message, Snackbar.LENGTH_LONG).show()
-                        }
-                        is AnimeDetailsViewModel.AnimeDetailsUiStates.Initial -> Unit
-                        is AnimeDetailsViewModel.AnimeDetailsUiStates.Success -> {
-                            binding.apply {
-                                tvHeadingDuration.isVisible = true
-                                tvHeadingEpisodes.isVisible = true
-                                tvHeadingMeanScore.isVisible = true
-                                tvHeadingGenres.isVisible = true
-                                tvHeadingStatus.isVisible = true
-                                tvHeadingFormat.isVisible = true
-
-                                ivBanner.load(
-                                    it.bannerImageUrl
-                                ) {
-                                    crossfade(true)
-                                }
-                            }
-
-                        }
-
-                        is AnimeDetailsViewModel.AnimeDetailsUiStates.ShowIsFavourite ->
-                            binding.btnFavourite.isVisible = true
-                    }
+                    handleUiState(it)
                 }
             }
+        }
+    }
+
+    private fun handleUiState(it: AnimeDetailsViewModel.AnimeDetailsUiStates) {
+        when (it) {
+            is AnimeDetailsViewModel.AnimeDetailsUiStates.Error -> {
+                Log.i("TAG", "subscribeUi: erros")
+                Snackbar.make(binding.cLayout, it.message, Snackbar.LENGTH_LONG).show()
+            }
+
+            is AnimeDetailsViewModel.AnimeDetailsUiStates.Initial -> Unit
+            is AnimeDetailsViewModel.AnimeDetailsUiStates.Success -> {
+                binding.apply {
+                    tvHeadingDuration.isVisible = true
+                    tvHeadingEpisodes.isVisible = true
+                    tvHeadingMeanScore.isVisible = true
+                    tvHeadingGenres.isVisible = true
+                    tvHeadingStatus.isVisible = true
+                    tvHeadingFormat.isVisible = true
+
+                    ivBanner.load(
+                        it.bannerImageUrl
+                    ) {
+                        crossfade(true)
+                    }
+                }
+
+            }
+
+            is AnimeDetailsViewModel.AnimeDetailsUiStates.ShowIsFavourite ->
+                binding.btnFavourite.isVisible = true
         }
     }
 

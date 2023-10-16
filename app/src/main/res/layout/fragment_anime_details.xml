@@ -9,7 +9,10 @@
             name="viewModel"
             type="com.aryan.animeexplorer.presentation.AnimeDetailsViewModel" />
     </data>
-
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/srlAnimeDetails"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/cLayout"
         android:layout_width="match_parent"
@@ -381,4 +384,5 @@
         </ImageView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
