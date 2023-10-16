@@ -17,7 +17,7 @@ import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.FragmentHomeBinding
 import com.aryan.animeexplorer.domain.model.AnimeTitleType
 import com.aryan.animeexplorer.presentation.HomeViewModel
-import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
+import com.aryan.animeexplorer.view.adapter.PagedAnimeTitlesAdapter
 import com.aryan.animeexplorer.view.adapter.Orientation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,9 +25,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var trendingAnimeTitlesAdapter: AnimeTitlesAdapter
-    private lateinit var popularAnimeTitlesAdapter: AnimeTitlesAdapter
-    private lateinit var top100AnimeTitlesAdapter: AnimeTitlesAdapter
+    private lateinit var trendingPagedAnimeTitlesAdapter: PagedAnimeTitlesAdapter
+    private lateinit var popularPagedAnimeTitlesAdapter: PagedAnimeTitlesAdapter
+    private lateinit var top100PagedAnimeTitlesAdapter: PagedAnimeTitlesAdapter
 
 
     private val viewModel: HomeViewModel by activityViewModels()
@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
         binding.btnSearch.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
+        
         binding.btnFavourites.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_favouriteFragment)
         }
@@ -49,7 +50,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initSubsections() {
-        trendingAnimeTitlesAdapter = AnimeTitlesAdapter(
+        trendingPagedAnimeTitlesAdapter = PagedAnimeTitlesAdapter(
             onViewItemClicked = ::onAnimeTitleClicked,
             orientation = Orientation.H
         )
@@ -58,10 +59,10 @@ class HomeFragment : Fragment() {
                 requireContext(),
                 RecyclerView.HORIZONTAL, false
             )
-            adapter = trendingAnimeTitlesAdapter
+            adapter = trendingPagedAnimeTitlesAdapter
         }
 
-        popularAnimeTitlesAdapter = AnimeTitlesAdapter(
+        popularPagedAnimeTitlesAdapter = PagedAnimeTitlesAdapter(
             onViewItemClicked = ::onAnimeTitleClicked,
             orientation = Orientation.H
         )
@@ -70,15 +71,15 @@ class HomeFragment : Fragment() {
                 requireContext(),
                 RecyclerView.HORIZONTAL, false
             )
-            adapter = popularAnimeTitlesAdapter
+            adapter = popularPagedAnimeTitlesAdapter
         }
 
-        top100AnimeTitlesAdapter = AnimeTitlesAdapter(AnimeTitleType.TOP100, ::onAnimeTitleClicked)
+        top100PagedAnimeTitlesAdapter = PagedAnimeTitlesAdapter(AnimeTitleType.TOP100, ::onAnimeTitleClicked)
         binding.rvSubSectionTop100Anime.apply {
             layoutManager = GridLayoutManager(
                 requireContext(), 2
             )
-            adapter = top100AnimeTitlesAdapter
+            adapter = top100PagedAnimeTitlesAdapter
 
         }
     }
@@ -90,7 +91,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.trendingAnimeTitles.collect { animeTitle ->
-                    trendingAnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
+                    trendingPagedAnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
                 }
             }
         }
@@ -98,7 +99,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.popularAnimeTitles.collect { animeTitle ->
-                    popularAnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
+                    popularPagedAnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
                 }
             }
         }
@@ -106,7 +107,7 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.top100AnimeTitles.collect { animeTitle ->
 
-                    top100AnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
+                    top100PagedAnimeTitlesAdapter.submitData(viewLifecycleOwner.lifecycle, animeTitle)
                 }
             }
         }
@@ -123,9 +124,9 @@ class HomeFragment : Fragment() {
     private fun refresh() {
         binding.srlHome.isRefreshing = true
 
-        trendingAnimeTitlesAdapter.refresh()
-        popularAnimeTitlesAdapter.refresh()
-        top100AnimeTitlesAdapter.refresh()
+        trendingPagedAnimeTitlesAdapter.refresh()
+        popularPagedAnimeTitlesAdapter.refresh()
+        top100PagedAnimeTitlesAdapter.refresh()
 
         binding.srlHome.isRefreshing = false
 

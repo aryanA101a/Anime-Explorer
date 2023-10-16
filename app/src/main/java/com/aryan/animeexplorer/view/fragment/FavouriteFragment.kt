@@ -13,10 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aryan.animeexplorer.R
-import com.aryan.animeexplorer.databinding.FragmentAnimeDetailsBinding
 import com.aryan.animeexplorer.databinding.FragmentFavouriteBinding
 import com.aryan.animeexplorer.presentation.FavouriteViewModel
-import com.aryan.animeexplorer.view.adapter.FavouriteAnimeTitlesAdapter
+import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +24,7 @@ class FavouriteFragment : Fragment() {
 
     private lateinit var binding: FragmentFavouriteBinding
     private val favouriteViewModel: FavouriteViewModel by viewModels()
-    private lateinit var favouriteAnimeTitlesAdapter: FavouriteAnimeTitlesAdapter
+    private lateinit var favouritePagedAnimeTitlesAdapter: AnimeTitlesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +43,7 @@ class FavouriteFragment : Fragment() {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     favouriteViewModel.favourites.collect { favourites ->
                         Log.i("TAG", "subscribeUi: $favourites")
-                        favouriteAnimeTitlesAdapter.submitList(favourites)
+                        favouritePagedAnimeTitlesAdapter.submitList(favourites)
                     }
                 }
             }
@@ -54,13 +53,13 @@ class FavouriteFragment : Fragment() {
     }
 
     private fun initFavouriteAnimeTitles() {
-        favouriteAnimeTitlesAdapter= FavouriteAnimeTitlesAdapter(::onAnimeTitleClicked)
+        favouritePagedAnimeTitlesAdapter= AnimeTitlesAdapter(::onAnimeTitleClicked)
         binding.rvFavourites.apply {
             layoutManager = GridLayoutManager(
                 requireContext(),
                 2
             )
-            adapter = favouriteAnimeTitlesAdapter
+            adapter = favouritePagedAnimeTitlesAdapter
         }
     }
 

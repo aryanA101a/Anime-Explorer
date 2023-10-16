@@ -12,6 +12,7 @@ import com.aryan.animeexplorer.domain.model.AnimeTitleType
 data class AnimeTitleEntity(
     val id: Int,
     val title: String?,
+    val romanjiTitle: String?,
     val imageUrl: String?,
     val color: String?,
     val type: AnimeTitleType,

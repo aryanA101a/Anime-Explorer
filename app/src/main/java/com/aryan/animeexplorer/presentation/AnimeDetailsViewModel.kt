@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aryan.animeexplorer.data.local.CacheDatabase
-import com.aryan.animeexplorer.data.mappers.toFavouriteAnimeTitle
+import com.aryan.animeexplorer.data.mappers.toFavouritesEntity
 import com.aryan.animeexplorer.domain.model.AnimeDetails
 import com.aryan.animeexplorer.domain.repository.AnimeDetailsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,7 +73,7 @@ class AnimeDetailsViewModel @Inject constructor(
             _isFavourite.update { !_isFavourite.value }
             viewModelScope.launch {
                 if (_isFavourite.value)
-                    cacheDatabase.favouritesDao.markAsFavourite(animeDetailsState.value.toFavouriteAnimeTitle())
+                    cacheDatabase.favouritesDao.markAsFavourite(animeDetailsState.value.toFavouritesEntity())
                 else
                     cacheDatabase.favouritesDao.unMarkAsFavourite(animeDetailsState.value.id)
 

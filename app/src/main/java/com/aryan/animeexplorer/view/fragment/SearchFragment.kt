@@ -1,7 +1,6 @@
 package com.aryan.animeexplorer.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.FragmentSearchBinding
 import com.aryan.animeexplorer.presentation.SearchViewModel
-import com.aryan.animeexplorer.view.adapter.SearchAnimeTitlesAdapter
+import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +24,7 @@ import kotlinx.coroutines.launch
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var searchAnimeTitlesAdapter: SearchAnimeTitlesAdapter
+    private lateinit var animeTitlesAdapter: AnimeTitlesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,13 +43,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun initSearchResults() {
-        searchAnimeTitlesAdapter = SearchAnimeTitlesAdapter(::onAnimeTitleClicked)
+        animeTitlesAdapter = AnimeTitlesAdapter(::onAnimeTitleClicked)
         binding.rvSearch.apply {
             layoutManager = GridLayoutManager(
                 requireContext(),
                 2
             )
-            adapter = searchAnimeTitlesAdapter
+            adapter = animeTitlesAdapter
         }
     }
 
@@ -58,7 +57,7 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.searchedAnimeTitles.collect { animeTitles ->
-                        searchAnimeTitlesAdapter.submitList(animeTitles)
+                        animeTitlesAdapter.submitList(animeTitles)
                     }
                 }
             }

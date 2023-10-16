@@ -5,7 +5,6 @@ import com.aryan.AnimeDetailsQuery
 import com.aryan.animeexplorer.data.local.entity.AnimeDetailsEntity
 import com.aryan.animeexplorer.data.local.entity.FavouritesEntity
 import com.aryan.animeexplorer.domain.model.AnimeDetails
-import com.aryan.animeexplorer.domain.model.FavouriteAnimeTitle
 
 
 fun AnimeDetailsEntity.toAnimeDetails(): AnimeDetails {
@@ -51,11 +50,3 @@ fun AnimeDetailsQuery.Media.toAnimeDetailsEntity(): AnimeDetailsEntity {
 
 }
 
-fun AnimeDetails.toFavouriteAnimeTitle():FavouritesEntity{
-    return FavouritesEntity(
-        id = id,
-        title = title,
-        imageUrl = imageUrl,
-        color = color,
-    )
-}
