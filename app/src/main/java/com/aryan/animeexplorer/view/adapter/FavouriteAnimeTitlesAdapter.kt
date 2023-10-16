@@ -11,15 +11,19 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.aryan.animeexplorer.R
 import com.aryan.animeexplorer.databinding.AnimeTitleBinding
-import com.aryan.animeexplorer.domain.model.AnimeTitle
 import com.aryan.animeexplorer.domain.model.FavouriteAnimeTitle
 
 class FavouriteAnimeTitlesAdapter(
     val onViewItemClicked: (Int, String) -> Unit
 ) :
-    ListAdapter<FavouriteAnimeTitle, FavouriteAnimeTitlesAdapter.FavouriteAnimeTitleViewHolder>(FavouriteAnimeTitleDiffCallback()) {
+    ListAdapter<FavouriteAnimeTitle, FavouriteAnimeTitlesAdapter.FavouriteAnimeTitleViewHolder>(
+        FavouriteAnimeTitleDiffCallback()
+    ) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteAnimeTitleViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): FavouriteAnimeTitleViewHolder {
         return FavouriteAnimeTitleViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -39,6 +43,8 @@ class FavouriteAnimeTitlesAdapter(
         fun bind(data: FavouriteAnimeTitle, position: Int) {
 
             binding.apply {
+                cvAnimeTitle.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                cvAnimeTitle.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                 cvAnimeTitle.setOnClickListener {
                     onViewItemClicked(data.id, data.title ?: "")
                 }

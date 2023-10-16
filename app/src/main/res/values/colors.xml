@@ -7,4 +7,6 @@
     <color name="backgroundColor">#ffECF0F5</color>
     <color name="TitleTwo">#647281</color>
     <color name="titleThree">#8AA0B3</color>
+    <color name="title_color">#282E2D</color>
+    <color name="subtitle_color">#424C4B</color>
 </resources>

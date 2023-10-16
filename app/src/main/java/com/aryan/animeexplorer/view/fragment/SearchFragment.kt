@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -31,8 +32,8 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner=viewLifecycleOwner
-            viewModel=viewModel
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = viewModel
         }
         binding.tietSearch.doOnTextChanged { text, start, before, count ->
             text?.let { viewModel.executeSearch(it.toString()) }
@@ -42,36 +43,59 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-private fun initSearchResults(){
-    searchAnimeTitlesAdapter = SearchAnimeTitlesAdapter(::onAnimeTitleClicked)
-    binding.rvSearch.apply {
-        layoutManager = GridLayoutManager(
-            requireContext(),
-           2
-        )
-        adapter = searchAnimeTitlesAdapter
+    private fun initSearchResults() {
+        searchAnimeTitlesAdapter = SearchAnimeTitlesAdapter(::onAnimeTitleClicked)
+        binding.rvSearch.apply {
+            layoutManager = GridLayoutManager(
+                requireContext(),
+                2
+            )
+            adapter = searchAnimeTitlesAdapter
+        }
     }
-}
 
-    private fun subscribeUi(){
+    private fun subscribeUi() {
         try {
-            viewLifecycleOwner.lifecycleScope.launch{
+            viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.searchedAnimeTitles.collect { animeTitles ->
                         searchAnimeTitlesAdapter.submitList(animeTitles)
                     }
                 }
             }
-        }catch (e:Exception){
-            Log.e("TAG", "subscribeUi: $e", )
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiState.collect {
+                        when (it) {
+                            is SearchViewModel.SearchUiStates.Empty -> {
+                                binding.llException.isVisible = true
+                                binding.tvException.text = "No Data"
+                            }
+
+                            is SearchViewModel.SearchUiStates.Error -> {
+                                binding.llException.isVisible = true
+                                binding.tvException.text = "Something went wrong"
+                            }
+
+                            is SearchViewModel.SearchUiStates.Initial -> Unit
+                            is SearchViewModel.SearchUiStates.Success -> binding.llException.isVisible =
+                                false
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "subscribeUi: $e")
         }
     }
+
     private fun onAnimeTitleClicked(id: Int, title: String) {
         val bundle = Bundle().apply {
             putString("id", id.toString())
             putString("title", title)
         }
-        findNavController().navigate(R.id.action_searchFragment_to_animeDetailFragment,bundle)
+        findNavController().navigate(R.id.action_searchFragment_to_animeDetailFragment, bundle)
     }
 
 }

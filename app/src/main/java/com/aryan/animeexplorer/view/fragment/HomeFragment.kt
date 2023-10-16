@@ -18,6 +18,7 @@ import com.aryan.animeexplorer.databinding.FragmentHomeBinding
 import com.aryan.animeexplorer.domain.model.AnimeTitleType
 import com.aryan.animeexplorer.presentation.HomeViewModel
 import com.aryan.animeexplorer.view.adapter.AnimeTitlesAdapter
+import com.aryan.animeexplorer.view.adapter.Orientation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,7 +49,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initSubsections() {
-        trendingAnimeTitlesAdapter = AnimeTitlesAdapter(onViewItemClicked = ::onAnimeTitleClicked)
+        trendingAnimeTitlesAdapter = AnimeTitlesAdapter(
+            onViewItemClicked = ::onAnimeTitleClicked,
+            orientation = Orientation.H
+        )
         binding.rvSubSectionTrending.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -57,7 +61,10 @@ class HomeFragment : Fragment() {
             adapter = trendingAnimeTitlesAdapter
         }
 
-        popularAnimeTitlesAdapter = AnimeTitlesAdapter(onViewItemClicked = ::onAnimeTitleClicked)
+        popularAnimeTitlesAdapter = AnimeTitlesAdapter(
+            onViewItemClicked = ::onAnimeTitleClicked,
+            orientation = Orientation.H
+        )
         binding.rvSubSectionAllTimePopular.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -72,6 +79,7 @@ class HomeFragment : Fragment() {
                 requireContext(), 2
             )
             adapter = top100AnimeTitlesAdapter
+            
         }
     }
 
@@ -110,3 +118,4 @@ class HomeFragment : Fragment() {
 
 
 }
+

@@ -23,7 +23,7 @@ class AnimeDetailsViewModel @Inject constructor(
     ViewModel() {
 
     private val _isFavourite = MutableStateFlow<Boolean>(false)
-    val isFavourite:StateFlow<Boolean> = _isFavourite
+    val isFavourite: StateFlow<Boolean> = _isFavourite
 
     private val _animeDetailsState = MutableStateFlow(AnimeDetails(0))
     val animeDetailsState: StateFlow<AnimeDetails> = _animeDetailsState
@@ -54,8 +54,8 @@ class AnimeDetailsViewModel @Inject constructor(
                         _animeDetailsState.update { animeDetails }
                         animeDetails.bannerImage?.let { bannerImage ->
                             _uiState.update {
-                                AnimeDetailsUiStates.LoadBannerImage(
-                                    url = bannerImage
+                                AnimeDetailsUiStates.Success(
+                                    bannerImageUrl = bannerImage
                                 )
                             }
                         }
@@ -86,7 +86,7 @@ class AnimeDetailsViewModel @Inject constructor(
     sealed class AnimeDetailsUiStates {
         data class Initial(val message: String? = null) : AnimeDetailsUiStates()
         data class Error(val message: String) : AnimeDetailsUiStates()
-        data class LoadBannerImage(val url: String) : AnimeDetailsUiStates()
+        data class Success(val bannerImageUrl: String) : AnimeDetailsUiStates()
         data class ShowIsFavourite(val data: Boolean? = null) : AnimeDetailsUiStates()
     }
 }

@@ -40,8 +40,8 @@ class AnimeTitleRemoteMediator(
                         1
                     } else {
                         val pageKey = cacheDB.pageKeyDao.pageKey(lastItem.id, type)
-                        hasNext = pageKey.hasNextPage
-                        if (pageKey.currentPage != null)
+                        hasNext = pageKey?.hasNextPage
+                        if (pageKey?.currentPage != null)
                             pageKey.currentPage + 1
                         else
                             throw InvalidObjectException("Remote key should not be null for $loadType")

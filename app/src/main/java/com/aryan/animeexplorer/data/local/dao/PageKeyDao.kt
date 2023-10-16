@@ -12,7 +12,7 @@ interface PageKeyDao {
     suspend fun upsertAll(pageKeys:List<PageKeyEntity>)
 
     @Query("SELECT * FROM ${PageKeyEntity.TABLE_NAME} WHERE animeTitleID = :id AND type = :type ")
-    suspend fun pageKey(id:Int,type: AnimeTitleType): PageKeyEntity
+    suspend fun pageKey(id:Int,type: AnimeTitleType): PageKeyEntity?
 
     @Query("DELETE FROM ${PageKeyEntity.TABLE_NAME}")
     suspend fun clearAll()

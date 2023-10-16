@@ -18,7 +18,8 @@ import com.aryan.animeexplorer.domain.model.AnimeTitleType
 
 class AnimeTitlesAdapter(
     val type: AnimeTitleType? = null,
-    val onViewItemClicked: (Int, String) -> Unit
+    val onViewItemClicked: (Int, String) -> Unit,
+    val orientation: Orientation=Orientation.V
 ) :
     PagingDataAdapter<AnimeTitle, AnimeTitlesAdapter.AnimeTitleViewHolder>(AnimeTitleDiffCallback()) {
 
@@ -42,6 +43,17 @@ class AnimeTitlesAdapter(
         fun bind(data: AnimeTitle, position: Int) {
 
             binding.apply {
+                when (orientation) {
+                    Orientation.H -> {
+                        cvAnimeTitle.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                        cvAnimeTitle.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                    }
+
+                    Orientation.V -> {
+                        cvAnimeTitle.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                        cvAnimeTitle.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    }
+                }
                 type?.let {
                     if (it == AnimeTitleType.TOP100) {
                         cvRankAnimeTitle.isVisible = true
@@ -90,3 +102,5 @@ class AnimeTitleDiffCallback : DiffUtil.ItemCallback<AnimeTitle>() {
     }
 
 }
+
+enum class Orientation { H, V }

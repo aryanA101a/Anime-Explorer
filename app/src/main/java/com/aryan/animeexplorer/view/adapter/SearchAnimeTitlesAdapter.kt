@@ -35,6 +35,8 @@ class SearchAnimeTitlesAdapter(val onViewItemClicked: (Int, String) -> Unit) :
         fun bind(data: AnimeTitle) {
 
             binding.apply {
+                cvAnimeTitle.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                cvAnimeTitle.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                 cvAnimeTitle.setOnClickListener {
                     onViewItemClicked(data.id, data.title ?: "")
                 }
