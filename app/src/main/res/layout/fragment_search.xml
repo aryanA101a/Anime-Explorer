@@ -9,9 +9,7 @@
             name="viewModel"
             type="com.aryan.animeexplorer.presentation.SearchViewModel" />
     </data>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cvSearch"
         android:layout_width="match_parent"
@@ -96,5 +94,5 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+
 </layout>

@@ -31,29 +31,41 @@ class SearchViewModel @Inject constructor(
 
     fun executeSearch(searchQuery: String) {
         searchJob?.cancel()
-        searchJob = viewModelScope.launch(Dispatchers.IO) {
-            delay(500L)
-            val animeTitles: List<AnimeTitle>? = try {
-                animeClient.searchAnimeTitles(
-                    1,
-                    50,
-                    searchQuery
-                )?.animeTitles
-            } catch (e: Exception) {
-                Log.e("TAG", "executeSearch: $e")
-                _searchedAnimeTitles.update { emptyList() }
-                _uiState.update { SearchUiStates.Error(e.message.toString()) }
-                null
-            }
-            animeTitles?.let { animeTitles ->
-                if (animeTitles.isNotEmpty()) {
-                    _searchedAnimeTitles.update { animeTitles }
-                    _uiState.update { SearchUiStates.Success() }
+        if (searchQuery.isNotEmpty()) {
+            searchJob = viewModelScope.launch(Dispatchers.IO) {
+                delay(500L)
+                val animeTitles: List<AnimeTitle>? = try {
+
+                    animeClient.searchAnimeTitles(
+                        1,
+                        50,
+                        searchQuery
+                    )?.animeTitles
+
+
+                } catch (e: Exception) {
+                    Log.e("TAG", "executeSearch: $e")
+                    null
+                }
+                Log.i("TAG", "executeSearch: ${searchQuery}")
+                Log.i("TAG", "executeSearch: ${animeTitles?.size}")
+                if (animeTitles == null) {
+                    _searchedAnimeTitles.update { emptyList() }
+                    _uiState.update { SearchUiStates.Error("Couldn't fetch anime titles") }
                 } else {
-                    _searchedAnimeTitles.update { animeTitles }
-                    _uiState.update { SearchUiStates.Empty() }
+                    animeTitles?.let { animeTitles ->
+                        if (animeTitles.isNotEmpty()) {
+                            _searchedAnimeTitles.update { animeTitles }
+                            _uiState.update { SearchUiStates.Success() }
+                        } else {
+                            _searchedAnimeTitles.update { animeTitles }
+                            _uiState.update { SearchUiStates.Empty() }
+                        }
+                    }
                 }
             }
+        } else {
+            _searchedAnimeTitles.update { emptyList() }
         }
 
     }
